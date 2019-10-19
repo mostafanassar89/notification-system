@@ -1,0 +1,25 @@
+{
+  "name": "api",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "amqplib": "^0.5.5",
+    "express": "^4.17.1",
+    "jsonschema": "^1.2.4",
+    "mongoose": "^5.7.5"
+  },
+  "devDependencies": {
+    "chai": "^4.2.0",
+    "chai-as-promised": "^7.1.1",
+    "mocha": "^6.2.1",
+    "nodemon": "^1.19.4",
+    "sinon": "^7.5.0"
+  },
+  "scripts": {
+    "test": "mocha test/*.spec.js",
+    "start": "node ./index.js"
+  }
+}

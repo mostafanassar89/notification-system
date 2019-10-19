@@ -1,0 +1,48 @@
+version: "3"
+services:
+  api:
+    container_name: api
+    build:
+      context: ./api/
+    environment:
+      - RABBIT_MQ_URL=amqp://rabbitmq:5672
+      - SMS_QUEUE=sms_notification_queue
+      - PUSH_NOTIFICATIONS_QUEUE=push_notification_queue
+      - MONGO_URL=mongodb://mongo:27017
+      - DB_NAME=notifications
+    volumes:
+      - ./api:/home/node/app
+    ports:
+      - "3000:3000"
+    restart: always
+    depends_on:
+      - rabbitmq
+      - mongo
+  mongo:
+    container_name: mongo
+    image: mongo
+    volumes:
+      - ./volumes/data:/data/db
+      - /home/node/app/node_modules
+    ports:
+      - "27017:27017"
+  rabbitmq:
+    container_name: rabbitmq
+    image: "rabbitmq:management"
+    ports:
+      - "5672:5672"
+      - "15672:15672"  
+  sms_service:
+    container_name: sms_service
+    build:
+      context: ./sms_service/
+    environment:
+      - WORKER_QUEUE=sms_notification_queue
+      - RABBIT_MQ_URL=amqp://rabbitmq:5672
+      - NOTIFICATION_LIMIT=100  
+    volumes:
+      - ./sms_service:/home/node/app
+      - /home/node/app/node_modules
+    depends_on:
+      - rabbitmq
+    restart: always
